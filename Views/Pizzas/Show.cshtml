@@ -1,0 +1,23 @@
+﻿
+@model Pizza
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Image</th>
+            <th scope="col">price</th>
+        </tr>
+    </thead>
+    <tbody>
+
+            <tr>
+                <th>@Model.Name</th>
+                <td>@Model.Description</td>
+                <td> <img src="@Model.Image" alt="Immagine della pizza"> </td>
+                <td>@Model.Price&euro;</td>
+            </tr>
+
+    </tbody>
+</table>
