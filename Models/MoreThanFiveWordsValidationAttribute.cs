@@ -15,11 +15,11 @@ namespace la_mia_pizzeri_crud_mvc.Models
                 {
                     words.Add(word);
                 }
-            }
 
-            if (words.Count < 5)
-            {
-                return new ValidationResult("Il campo descrizione deve contenere almeno 5 parole.");
+                if (words.Count < 5)
+                {
+                    return new ValidationResult("Il campo descrizione deve contenere almeno 5 parole.");
+                }
             }
 
             return ValidationResult.Success;
