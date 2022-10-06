@@ -1,8 +1,8 @@
-﻿using la_mia_pizzeria_post.Models;
+﻿using la_mia_pizzeri_crud_mvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace la_mia_pizzeria_post.Controllers
+namespace la_mia_pizzeri_crud_mvc.Controllers
 {
     public class HomeController : Controller
     {

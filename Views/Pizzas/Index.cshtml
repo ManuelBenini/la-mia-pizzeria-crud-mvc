@@ -21,7 +21,14 @@
                     <td>@pizza.Description</td>
                     <td> <img src="@pizza.Image" alt="Immagine della pizza"> </td>
                     <td>@pizza.Price&euro;</td>
-                    <td> <a href="@Url.Action("Show", "Pizzas", new {id = pizza.PizzaId})">Go to the detail</a> </td>
+                    <td> 
+                        <a href="@Url.Action("Show", "Pizzas", new {id = pizza.PizzaId})">Go to the detail</a>
+                        <a href="@Url.Action("Edit", "Pizzas", new {id = pizza.PizzaId})">Modify</a>
+                        <form asp-controller="Pizzas" asp-action="Delete" asp-route-id="@pizza.PizzaId" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             }
         }

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace la_mia_pizzeria_post.Models
+namespace la_mia_pizzeri_crud_mvc.Models
 {
     [Table("Pizzas")]
     public class Pizza
@@ -22,14 +22,14 @@ namespace la_mia_pizzeria_post.Models
 
         [Required(ErrorMessage = "Il campo prezzo è obbligatorio")]
         [MoreThanZeroValidation]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         public Pizza()
         {
 
         }
 
-        public Pizza(string name, string description, string image, double price)
+        public Pizza(string name, string description, string image, decimal price)
         {
             Name = name;
             Description = description;

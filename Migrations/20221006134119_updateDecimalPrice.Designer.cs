@@ -11,8 +11,8 @@ using la_mia_pizzeri_crud_mvc.Models;
 namespace la_mia_pizzeri_crud_mvc.Migrations
 {
     [DbContext(typeof(PizzaContext))]
-    [Migration("20221005123119_Init")]
-    partial class Init
+    [Migration("20221006134119_updateDecimalPrice")]
+    partial class updateDecimalPrice
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace la_mia_pizzeri_crud_mvc.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("la_mia_pizzeria_post.Models.Pizza", b =>
+            modelBuilder.Entity("la_mia_pizzeri_crud_mvc.Models.Pizza", b =>
                 {
                     b.Property<int>("PizzaId")
                         .ValueGeneratedOnAdd()
@@ -41,10 +41,11 @@ namespace la_mia_pizzeri_crud_mvc.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("PizzaId");
 
