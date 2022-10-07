@@ -109,6 +109,8 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Update(int id, PizzaWithCategory model)
         {
+            model.Categories = db.Categories.ToList();
+
             if (!ModelState.IsValid)
             {
                 return View("Edit", model);
