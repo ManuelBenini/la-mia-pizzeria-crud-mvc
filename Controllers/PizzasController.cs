@@ -27,10 +27,16 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
             //Se la tabella Pizzas del DB è vuota, aggiungo delle pizze d'esempio
             if (pizzas.Count == 0)
             {
-                db.Add(new Pizza("Margherita", "La pizza Margherita è buona", "https://www.finedininglovers.it/sites/g/files/xknfdk1106/files/styles/recipes_1200_800_fallback/public/fdl_content_import_it/margherita-50kalo.jpg?itok=v9nHxNMS", 10.50m));
-                db.Add(new Pizza("Napoli", "La pizza Napoli è buona", "https://media-cdn.tripadvisor.com/media/photo-s/18/03/98/d6/received-665664433902722.jpg", 14.50m));
-                db.Add(new Pizza("Romana", "La pizza Romana è buona", "https://recipesblob.oetker.com/files/95bdfe7334364b41b557c734cd1c64c4/889e39b112414a9aa2b3ae5a9f787f6b/1272x764/pizza-alla-romanajpg.jpg", 17.50m));
-                db.Add(new Pizza("4 Gusti", "La pizza 4 Gusti è buona", "https://media-cdn.tripadvisor.com/media/photo-s/07/61/12/f1/pizza-4-gusti.jpg", 5.50m));
+                db.Add(new Category("Pizza bianche"));
+                db.Add(new Category("Pizza vegetariane"));
+                db.Add(new Category("Pizza classiche"));
+                db.Add(new Category("Pizza di mare"));
+                db.SaveChanges();
+
+                db.Add(new Pizza("Margherita", "La pizza Margherita è buona", "https://www.finedininglovers.it/sites/g/files/xknfdk1106/files/styles/recipes_1200_800_fallback/public/fdl_content_import_it/margherita-50kalo.jpg?itok=v9nHxNMS", 10.50m, 1));
+                db.Add(new Pizza("Napoli", "La pizza Napoli è buona", "https://media-cdn.tripadvisor.com/media/photo-s/18/03/98/d6/received-665664433902722.jpg", 14.50m, 2));
+                db.Add(new Pizza("Romana", "La pizza Romana è buona", "https://recipesblob.oetker.com/files/95bdfe7334364b41b557c734cd1c64c4/889e39b112414a9aa2b3ae5a9f787f6b/1272x764/pizza-alla-romanajpg.jpg", 17.50m, 3));
+                db.Add(new Pizza("4 Gusti", "La pizza 4 Gusti è buona", "https://media-cdn.tripadvisor.com/media/photo-s/07/61/12/f1/pizza-4-gusti.jpg", 5.50m, 4));
                 db.SaveChanges();
             }
 
@@ -46,7 +52,11 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
         {
             Pizza pizza = db.Pizzas.Where(pizzas => pizzas.PizzaId == id).First<Pizza>();
 
-            return View(pizza);
+            Category category = db.Categories.Where(categories => categories.CategoryId == pizza.CategoryId).First<Category>();
+
+            PizzaWithCategory pizzaWithCategory = new (pizza, category);
+
+            return View(pizzaWithCategory);
         }
 
         [HttpGet]

@@ -24,6 +24,9 @@ namespace la_mia_pizzeri_crud_mvc.Models
         [MoreThanZeroValidation]
         public decimal Price { get; set; }
 
+        public int? CategoryId { get; set; }
+        public Category? Category { get; set; }
+
         public Pizza()
         {
 
@@ -36,5 +39,14 @@ namespace la_mia_pizzeri_crud_mvc.Models
             Image = image;
             Price = price;
         }
+        public Pizza(string name, string description, string image, decimal price, int categoryId)
+        {
+            Name = name;
+            Description = description;
+            Image = image;
+            Price = price;
+            CategoryId = categoryId;
+        }
+
     }
 }
