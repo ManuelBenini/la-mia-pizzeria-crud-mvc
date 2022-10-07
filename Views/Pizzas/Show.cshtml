@@ -1,4 +1,4 @@
-﻿@model PizzaWithCategory
+﻿@model Pizza
 
 <table class="table">
     <thead>
@@ -13,10 +13,10 @@
     <tbody>
 
             <tr>
-                <th>@Model.Pizza.Name</th>
-                <td>@Model.Pizza.Description</td>
-                <td> <img src="@Model.Pizza.Image" alt="Immagine della pizza"> </td>
-                <td>@Model.Pizza.Price&euro;</td>
+                <th>@Model.Name</th>
+                <td>@Model.Description</td>
+                <td> <img src="@Model.Image" alt="Immagine della pizza"> </td>
+                <td>@Model.Price&euro;</td>
                 <td>@Model.Category.Name</td>
             </tr>
 

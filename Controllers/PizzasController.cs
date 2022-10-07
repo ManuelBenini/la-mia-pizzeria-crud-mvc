@@ -1,5 +1,6 @@
 ﻿using la_mia_pizzeri_crud_mvc.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 
@@ -50,31 +51,33 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
 
         public IActionResult Show(int id)
         {
-            Pizza pizza = db.Pizzas.Where(pizzas => pizzas.PizzaId == id).First<Pizza>();
+            Pizza pizza = db.Pizzas.Where(pizzas => pizzas.PizzaId == id).Include("Category").First<Pizza>();
 
-            Category category = db.Categories.Where(categories => categories.CategoryId == pizza.CategoryId).First<Category>();
-
-            PizzaWithCategory pizzaWithCategory = new (pizza, category);
-
-            return View(pizzaWithCategory);
+            return View(pizza);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            PizzaWithCategory pizzaWithCategory = new();
+
+            pizzaWithCategory.Categories = db.Categories.ToList();
+
+            return View(pizzaWithCategory);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Store(Pizza model)
+        public IActionResult Store(PizzaWithCategory model)
         {
+            model.Categories = db.Categories.ToList();
+
             if (!ModelState.IsValid)
             {
                 return View("Create", model);
             }
 
-            db.Add(model);
+            db.Add(model.Pizza);
             db.SaveChanges();
 
             return RedirectToAction("Index");
@@ -85,20 +88,26 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
         {
             Pizza pizza = db.Pizzas.Find(id);
 
-            if(pizza == null)
+            if (pizza == null)
             {
                 return NotFound("Non è stato possibile trovare la pizza da modificare");
             }
             else
             {
-                return View(pizza);
+                PizzaWithCategory pizzaWithCategory = new();
+
+                pizzaWithCategory.Pizza = pizza;
+
+                pizzaWithCategory.Categories = db.Categories.ToList();
+
+                return View(pizzaWithCategory);
             }
 
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(int id, Pizza model)
+        public IActionResult Update(int id, PizzaWithCategory model)
         {
             if (!ModelState.IsValid)
             {
@@ -107,10 +116,11 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
 
             Pizza pizza = db.Pizzas.Find(id);
 
-            pizza.Name = model.Name;
-            pizza.Description = model.Description;
-            pizza.Image = model.Image;
-            pizza.Price = model.Price;
+            pizza.Name = model.Pizza.Name;
+            pizza.Description = model.Pizza.Description;
+            pizza.Image = model.Pizza.Image;
+            pizza.Price = model.Pizza.Price;
+            pizza.CategoryId = model.Pizza.CategoryId;
 
             //db.Pizzas.Update(model);
             db.SaveChanges();
