@@ -1,4 +1,4 @@
-namespace la_mia_pizzeri_crud_mvc.Models
+namespace Models
 {
     public class ErrorViewModel
     {

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace la_mia_pizzeri_crud_mvc.Models
+namespace Validations
 {
     public class MoreThanZeroValidationAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if(value != null)
+            if (value != null)
             {
                 if ((decimal)value <= 0)
                 {

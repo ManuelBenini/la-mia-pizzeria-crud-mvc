@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using la_mia_pizzeri_crud_mvc.Models;
+using Models;
 
 #nullable disable
 
-namespace la_mia_pizzeri_crud_mvc.Migrations
+namespace la_mia_pizzeria_crud_mvc.Migrations
 {
     [DbContext(typeof(PizzaContext))]
     [Migration("20221005123119_Init")]

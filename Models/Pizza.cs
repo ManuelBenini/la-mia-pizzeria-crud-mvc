@@ -1,8 +1,8 @@
-﻿using la_mia_pizzeria_crud_mvc.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Validations;
 
-namespace la_mia_pizzeri_crud_mvc.Models
+namespace Models
 {
     [Table("Pizzas")]
     public class Pizza
@@ -11,7 +11,7 @@ namespace la_mia_pizzeri_crud_mvc.Models
 
         [Required(ErrorMessage = "Il campo nome è obbligatorio")]
         [StringLength(50, ErrorMessage = "Il nome non può avere più di 50 caratteri")]
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         [Required(ErrorMessage = "Il campo descrizione è obbligatorio")]
         [MoreThanFiveWordsValidation]

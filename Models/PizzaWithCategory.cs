@@ -1,9 +1,9 @@
-﻿using la_mia_pizzeria_crud_mvc.Models;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Validations;
 
-namespace la_mia_pizzeri_crud_mvc.Models
+namespace Models
 {
     public class PizzaWithCategory
     {
@@ -11,6 +11,8 @@ namespace la_mia_pizzeri_crud_mvc.Models
         public List<Category>? Categories { get; set; }
 
         public List<Ingredient>? Ingredients { get; set; }
+
+        [OneIngredientMinimumValidation]
         public List<int>? SelectedIngredients { get; set; }
 
         public PizzaWithCategory()

@@ -1,8 +1,6 @@
-﻿using la_mia_pizzeri_crud_mvc.Models;
-using la_mia_pizzeria_crud_mvc.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace la_mia_pizzeri_crud_mvc.Models
+namespace Models
 {
     public class PizzaContext : DbContext
     {

@@ -1,61 +1,32 @@
-﻿using la_mia_pizzeri_crud_mvc.Models;
-using la_mia_pizzeria_crud_mvc.Models;
+﻿using Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 
-namespace la_mia_pizzeri_crud_mvc.Controllers
+namespace la_mia_pizzeria_crud_mvc.Controllers
 {
     public class PizzasController : Controller
     {
 
         PizzaContext db;
 
+        //Codice eseguito prima di tutto
         public PizzasController()
         {
             db = new();
 
+            //Inserisco queste righe di codice per poter inserire i decimali nell'input type="Number" dell'HTML poichè nel formato americano vi sono i punti e nell'italiano le virgole.
             System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
             customCulture.NumberFormat.NumberDecimalSeparator = ".";
 
             System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+
+            //Aggiungo nel DB pizze, categorie ed ingredienti se non esistono
+            StaticPush();
         }
 
-        public List<Pizza> Pizzas()
-        {
-            List<Pizza> pizzas = db.Pizzas.ToList<Pizza>();
-
-            //Se la tabella Pizzas del DB è vuota, aggiungo delle pizze d'esempio
-            if (pizzas.Count == 0)
-            {
-                db.Add(new Category("Pizza bianche"));
-                db.Add(new Category("Pizza vegetariane"));
-                db.Add(new Category("Pizza classiche"));
-                db.Add(new Category("Pizza di mare"));
-                db.SaveChanges();
-
-                db.Add(new Ingredient("Acciughe"));
-                db.Add(new Ingredient("Pomodoro"));
-                db.Add(new Ingredient("Wurstel"));
-                db.Add(new Ingredient("Funghi"));
-                db.Add(new Ingredient("Panna"));
-                db.SaveChanges();
-
-                db.Add(new Pizza("Margherita", "La pizza Margherita è buona", "https://www.finedininglovers.it/sites/g/files/xknfdk1106/files/styles/recipes_1200_800_fallback/public/fdl_content_import_it/margherita-50kalo.jpg?itok=v9nHxNMS", 10.50m, 1, new List<Ingredient>() { db.Ingredients.Find(1) , db.Ingredients.Find(2) }));
-                db.Add(new Pizza("Napoli", "La pizza Napoli è buona", "https://media-cdn.tripadvisor.com/media/photo-s/18/03/98/d6/received-665664433902722.jpg", 14.50m, 2, new List<Ingredient>() { db.Ingredients.Find(2), db.Ingredients.Find(3) }));
-                db.Add(new Pizza("Romana", "La pizza Romana è buona", "https://recipesblob.oetker.com/files/95bdfe7334364b41b557c734cd1c64c4/889e39b112414a9aa2b3ae5a9f787f6b/1272x764/pizza-alla-romanajpg.jpg", 17.50m, 3, new List<Ingredient>() { db.Ingredients.Find(4), db.Ingredients.Find(5) }));
-                db.Add(new Pizza("4 Gusti", "La pizza 4 Gusti è buona", "https://media-cdn.tripadvisor.com/media/photo-s/07/61/12/f1/pizza-4-gusti.jpg", 5.50m, 4, new List<Ingredient>() { db.Ingredients.Find(1), db.Ingredients.Find(5) }));
-                db.SaveChanges();
-            }
-
-            return pizzas;
-        }
-
-        public IActionResult Index()
-        {
-            return View(Pizzas());
-        }
+        public IActionResult Index() { return View(db.Pizzas.ToList()); }
 
         public IActionResult Show(int id)
         {
@@ -87,13 +58,11 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Store(PizzaWithCategory model)
         {
-            model.Categories = db.Categories.ToList();
-            model.Ingredients = db.Ingredients.ToList();
 
             if (!ModelState.IsValid)
             {
-                //model.Categories = db.Categories.ToList();
-                //model.Ingredients = db.Ingredients.ToList();
+                model.Categories = db.Categories.ToList();
+                model.Ingredients = db.Ingredients.ToList();
                 return View("Create", model);
             }
 
@@ -116,11 +85,12 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
             }
             else
             {
-                PizzaWithCategory pizzaWithCategory = new();
-
-                pizzaWithCategory.Pizza = pizza;
-                pizzaWithCategory.Categories = db.Categories.ToList();
-                pizzaWithCategory.Ingredients = db.Ingredients.ToList();
+                PizzaWithCategory pizzaWithCategory = new()
+                {
+                    Pizza = pizza,
+                    Categories = db.Categories.ToList(),
+                    Ingredients = db.Ingredients.ToList()
+                };
 
                 return View(pizzaWithCategory);
             }
@@ -131,13 +101,12 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Update(int id, PizzaWithCategory model)
         {
-            model.Categories = db.Categories.ToList();
-            model.Ingredients = db.Ingredients.ToList();
 
             if (!ModelState.IsValid)
             {
-                //model.Categories = db.Categories.ToList();
-                //model.Ingredients = db.Ingredients.ToList();
+                model.Categories = db.Categories.ToList();
+                model.Ingredients = db.Ingredients.ToList();
+                model.Pizza.PizzaId = id;
                 return View("Edit", model);
             }
 
@@ -151,16 +120,6 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
 
             pizza.Ingredients = db.Ingredients.Where(ingredient => model.SelectedIngredients.Contains(ingredient.IngredientId)).ToList();
 
-            //foreach (Ingredient ingredient in SelectedIngredients)
-            //{
-            //    if (!pizza.Ingredients.Contains(ingredient))
-            //    {
-            //        pizza.Ingredients.Add(ingredient);
-            //    }
-                
-            //}
-
-            //db.Pizzas.Update(model);
             db.SaveChanges();
 
             return RedirectToAction("Index");
@@ -175,7 +134,6 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
             if (pizza == null)
             {
                 return NotFound();
-                
             }
             else
             {
@@ -185,6 +143,40 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
                 return RedirectToAction("Index");
             }
 
+        }
+
+        private void StaticPush()
+        {
+            //Se la tabella Pizzas del DB è vuota, aggiungo delle pizze d'esempio
+            if (db.Pizzas.ToList().Count == 0)
+            {
+                db.Add(new Pizza("Margherita", "La pizza Margherita", "https://primochef.it/wp-content/uploads/2019/08/SH_pizza_fatta_in_casa-1200x800.jpg", 10.50m, 1, new List<Ingredient>() { db.Ingredients.Find(2) }));
+                db.Add(new Pizza("Napoli", "La pizza Napoli è buona", "https://media-cdn.tripadvisor.com/media/photo-s/18/03/98/d6/received-665664433902722.jpg", 14.50m, 2, new List<Ingredient>() { db.Ingredients.Find(2), db.Ingredients.Find(3) }));
+                db.Add(new Pizza("Romana", "La pizza Romana è buona", "https://recipesblob.oetker.com/files/95bdfe7334364b41b557c734cd1c64c4/889e39b112414a9aa2b3ae5a9f787f6b/1272x764/pizza-alla-romanajpg.jpg", 17.50m, 3, new List<Ingredient>() { db.Ingredients.Find(4), db.Ingredients.Find(5) }));
+                db.Add(new Pizza("4 Gusti", "La pizza 4 Gusti è buona", "https://media-cdn.tripadvisor.com/media/photo-s/07/61/12/f1/pizza-4-gusti.jpg", 5.50m, 4, new List<Ingredient>() { db.Ingredients.Find(1), db.Ingredients.Find(5) }));
+                db.SaveChanges();
+            }
+
+            //Se la tabella Categories del DB è vuota, aggiungo delle categorie d'esempio
+            if (db.Categories.ToList().Count == 0)
+            {
+                db.Add(new Category("Pizza bianche"));
+                db.Add(new Category("Pizza vegetariane"));
+                db.Add(new Category("Pizza classiche"));
+                db.Add(new Category("Pizza di mare"));
+                db.SaveChanges();
+            }
+
+            //Se la tabella Ingredients del DB è vuota, aggiungo degli ingredienti d'esempio
+            if (db.Ingredients.ToList().Count == 0)
+            {
+                db.Add(new Ingredient("Acciughe"));
+                db.Add(new Ingredient("Pomodoro"));
+                db.Add(new Ingredient("Wurstel"));
+                db.Add(new Ingredient("Funghi"));
+                db.Add(new Ingredient("Panna"));
+                db.SaveChanges();
+            }
         }
 
     }

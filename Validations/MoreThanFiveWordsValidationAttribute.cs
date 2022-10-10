@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace la_mia_pizzeri_crud_mvc.Models
+namespace Validations
 {
     public class MoreThanFiveWordsValidationAttribute : ValidationAttribute
     {
@@ -9,7 +9,7 @@ namespace la_mia_pizzeri_crud_mvc.Models
             string fieldValue = (string)value;
             List<string> words = new();
 
-            if(fieldValue != null)
+            if (fieldValue != null)
             {
                 foreach (string word in fieldValue.Split(' '))
                 {

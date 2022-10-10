@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace la_mia_pizzeri_crud_mvc.Migrations
+namespace la_mia_pizzeria_crud_mvc.Migrations
 {
     public partial class updateDecimalPrice : Migration
     {
