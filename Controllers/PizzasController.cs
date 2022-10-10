@@ -92,6 +92,11 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                     Ingredients = db.Ingredients.ToList()
                 };
 
+                foreach (Ingredient ingredient in pizza.Ingredients)
+                {
+                    pizzaWithCategory.SelectedIngredients.Add(ingredient.IngredientId);
+                }
+
                 return View(pizzaWithCategory);
             }
 
