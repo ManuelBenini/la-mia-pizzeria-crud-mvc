@@ -1,4 +1,5 @@
-﻿@model PizzaWithCategory
+﻿@using la_mia_pizzeria_crud_mvc.Models
+@model PizzaWithCategory
 
 @Html.AntiForgeryToken()
 <div class="form-group">
@@ -26,10 +27,35 @@
     <select asp-for="Pizza.CategoryId" class="form-select">
         @foreach (Category category in Model.Categories)
         {
-            <option value="@category.CategoryId">@category.Name</option>
+            @if(Model.Pizza.CategoryId == category.CategoryId)
+            {
+                <option value="@category.CategoryId" selected>@category.Name</option>
+            }
+            else
+            {
+                <option value="@category.CategoryId">@category.Name</option>
+            }
         }
     </select>
     <span asp-validation-for="Pizza.CategoryId" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label>Ingredienti pizza:</label>
+    <select asp-for="SelectedIngredients" multiple="multiple" size="10" class="form-select">
+        @foreach (Ingredient ingredient in Model.Ingredients)
+        {
+            @if (Model.Pizza.Ingredients.Contains(ingredient))
+            {
+                <option value="@ingredient.IngredientId" selected>@ingredient.Name</option>
+            }
+            else
+            {
+                <option value="@ingredient.IngredientId">@ingredient.Name</option>
+            }
+           
+        }
+    </select>
+    <span asp-validation-for="SelectedIngredients" class="text-danger"></span>
 </div>
 
 <button type="submit" class="btn btn-primary">Submit</button>
