@@ -149,16 +149,16 @@ namespace la_mia_pizzeri_crud_mvc.Controllers
             pizza.Price = model.Pizza.Price;
             pizza.CategoryId = model.Pizza.CategoryId;
 
-            List<Ingredient> SelectedIngredients = db.Ingredients.Where(ingredient => model.SelectedIngredients.Contains(ingredient.IngredientId)).ToList();
+            pizza.Ingredients = db.Ingredients.Where(ingredient => model.SelectedIngredients.Contains(ingredient.IngredientId)).ToList();
 
-            foreach (Ingredient ingredient in SelectedIngredients)
-            {
-                if (!pizza.Ingredients.Contains(ingredient))
-                {
-                    pizza.Ingredients.Add(ingredient);
-                }
+            //foreach (Ingredient ingredient in SelectedIngredients)
+            //{
+            //    if (!pizza.Ingredients.Contains(ingredient))
+            //    {
+            //        pizza.Ingredients.Add(ingredient);
+            //    }
                 
-            }
+            //}
 
             //db.Pizzas.Update(model);
             db.SaveChanges();
