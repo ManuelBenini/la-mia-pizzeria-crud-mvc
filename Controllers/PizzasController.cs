@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace la_mia_pizzeria_crud_mvc.Controllers
 {
+    [Authorize]
     public class PizzasController : Controller
     {
 
@@ -152,16 +154,6 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
 
         private void StaticPush()
         {
-            //Se la tabella Pizzas del DB è vuota, aggiungo delle pizze d'esempio
-            if (db.Pizzas.ToList().Count == 0)
-            {
-                db.Add(new Pizza("Margherita", "La pizza Margherita", "https://primochef.it/wp-content/uploads/2019/08/SH_pizza_fatta_in_casa-1200x800.jpg", 10.50m, 1, new List<Ingredient>() { db.Ingredients.Find(2) }));
-                db.Add(new Pizza("Napoli", "La pizza Napoli è buona", "https://media-cdn.tripadvisor.com/media/photo-s/18/03/98/d6/received-665664433902722.jpg", 14.50m, 2, new List<Ingredient>() { db.Ingredients.Find(2), db.Ingredients.Find(3) }));
-                db.Add(new Pizza("Romana", "La pizza Romana è buona", "https://recipesblob.oetker.com/files/95bdfe7334364b41b557c734cd1c64c4/889e39b112414a9aa2b3ae5a9f787f6b/1272x764/pizza-alla-romanajpg.jpg", 17.50m, 3, new List<Ingredient>() { db.Ingredients.Find(4), db.Ingredients.Find(5) }));
-                db.Add(new Pizza("4 Gusti", "La pizza 4 Gusti è buona", "https://media-cdn.tripadvisor.com/media/photo-s/07/61/12/f1/pizza-4-gusti.jpg", 5.50m, 4, new List<Ingredient>() { db.Ingredients.Find(1), db.Ingredients.Find(5) }));
-                db.SaveChanges();
-            }
-
             //Se la tabella Categories del DB è vuota, aggiungo delle categorie d'esempio
             if (db.Categories.ToList().Count == 0)
             {
@@ -180,6 +172,16 @@ namespace la_mia_pizzeria_crud_mvc.Controllers
                 db.Add(new Ingredient("Wurstel"));
                 db.Add(new Ingredient("Funghi"));
                 db.Add(new Ingredient("Panna"));
+                db.SaveChanges();
+            }
+
+            //Se la tabella Pizzas del DB è vuota, aggiungo delle pizze d'esempio
+            if (db.Pizzas.ToList().Count == 0)
+            {
+                db.Add(new Pizza("Margherita", "La pizza Margherita", "https://primochef.it/wp-content/uploads/2019/08/SH_pizza_fatta_in_casa-1200x800.jpg", 10.50m, 1, new List<Ingredient>() { db.Ingredients.Find(2) }));
+                db.Add(new Pizza("Napoli", "La pizza Napoli è buona", "https://media-cdn.tripadvisor.com/media/photo-s/18/03/98/d6/received-665664433902722.jpg", 14.50m, 2, new List<Ingredient>() { db.Ingredients.Find(2), db.Ingredients.Find(3) }));
+                db.Add(new Pizza("Romana", "La pizza Romana è buona", "https://recipesblob.oetker.com/files/95bdfe7334364b41b557c734cd1c64c4/889e39b112414a9aa2b3ae5a9f787f6b/1272x764/pizza-alla-romanajpg.jpg", 17.50m, 3, new List<Ingredient>() { db.Ingredients.Find(4), db.Ingredients.Find(5) }));
+                db.Add(new Pizza("4 Gusti", "La pizza 4 Gusti è buona", "https://media-cdn.tripadvisor.com/media/photo-s/07/61/12/f1/pizza-4-gusti.jpg", 5.50m, 4, new List<Ingredient>() { db.Ingredients.Find(1), db.Ingredients.Find(5) }));
                 db.SaveChanges();
             }
         }
